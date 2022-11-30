@@ -31,12 +31,14 @@
 </template>
 
 <script>
-import request from '@/helpers/request'
-request('/auth/login', 'POST', { username: 'h', password: '123456' })
+import Auth from '@/apis/auth'
+
+Auth.getInfo()
   .then(data => {
-    console.log(data)
+    console.log(data);
   })
 
+// 获取用户状态
 
 export default {
   data() {
@@ -81,6 +83,10 @@ export default {
       this.register.isError = false
       this.register.notice = ''
       console.log(`start register..., username: ${this.register.username} , password: ${this.register.password}`)
+      Auth.register({ username: this.register.username, password: this.register.password })
+        .then(data => {
+          console.log(data)
+        })
     },
     onLogin() {
       if (!/^[\w\u4e00-\u9fa5]{3,15}$/.test(this.login.username)) {
@@ -95,8 +101,11 @@ export default {
       }
       this.login.isError = false
       this.login.notice = ''
+      Auth.login({ username: this.login.username, password: this.login.password })
+        .then(data => {
+          console.log(data)
+        })
 
-      console.log(`start login..., username: ${this.login.username} , password: ${this.login.password}`)
     }
   }
 
@@ -136,7 +145,7 @@ export default {
 
   .main {
     flex: 1;
-    background: #36bc64 url(//cloud.hunger-valley.com/17-12-13/38476998.jpg-middle) center center no-repeat;
+    background: #36bc64 url(https://cloud.hunger-valley.com/17-12-13/38476998.jpg-middle) center center no-repeat;
     background-size: contain;
   }
 
