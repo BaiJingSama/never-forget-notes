@@ -7,7 +7,7 @@ axios.defaults.headers.post["Content-Type"] =
 axios.defaults.baseURL = "http://note-server.hunger-valley.com";
 // 接口的url
 
-export default request = (url, type = "GET", data = {}) => {
+export default function request(url, type = "GET", data = {}) {
   return new Promise((resolve, reject) => {
     let option = {
       url,
@@ -33,4 +33,4 @@ export default request = (url, type = "GET", data = {}) => {
         reject({ msg: "网络异常" });
       });
   });
-};
+}
