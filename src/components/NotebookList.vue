@@ -27,6 +27,9 @@
 <script>
 import Auth from '@/apis/auth';
 import router from '@/router/index'
+import Notebook from '@/apis/notebooks'
+window.Notebooks = Notebook
+
 export default {
   name: 'Login',
   data() {
