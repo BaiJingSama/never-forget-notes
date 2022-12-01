@@ -5,12 +5,22 @@
 </template>
 
 <script>
+import Auth from '@/apis/auth';
+import router from '@/router/index'
 export default {
   name: 'Login',
-  data () {
+  data() {
     return {
-      msg: '笔记详情页'
+      msg: '笔记本详情列表'
     }
+  },
+  created() {
+    Auth.getInfo()
+      .then(res => {
+        if (!res.isLogin) {
+          router.push({ path: '/login' })
+        }
+      })
   }
 }
 </script>
