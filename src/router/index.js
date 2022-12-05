@@ -12,8 +12,7 @@ export default new Router({
   routes: [
     {
       path: "/",
-      name: "HelloWorld",
-      component: HelloWorld
+      component: NotebookList
     },
     {
       path: "/login",
@@ -25,11 +24,11 @@ export default new Router({
       component: NotebookList
     },
     {
-      path: "/note/:noteId",
+      path: "/note",
       component: NoteDetail
     },
     {
-      path: "/trash/:noteId",
+      path: "/trash",
       component: TrashDetail
     }
   ]
