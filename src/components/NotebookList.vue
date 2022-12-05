@@ -7,7 +7,7 @@
       <div class="layout">
         <h3>笔记本列表({{notebooks.length}})</h3>
         <div class="book-list">
-          <router-link v-for="notebook in notebooks" to="/note/1" class="notebook">
+          <router-link v-for="notebook in notebooks" :to="`/note?notebookId=${notebook.id}`" class="notebook">
             <div>
               <span class="iconfont icon-notebook"></span> {{notebook.title}}
               <span>{{notebook.cont}}</span>
@@ -29,6 +29,7 @@ import Auth from '@/apis/auth';
 import router from '@/router/index'
 import Notebook from '@/apis/notebooks'
 import { friendlyDate } from '@/helpers/util'
+import { Loading } from 'element-ui';
 
 
 export default {
@@ -41,13 +42,19 @@ export default {
   created() {
     Auth.getInfo()
       .then(res => {
+
         if (!res.isLogin) {
           router.push({ path: '/login' })
         }
       })
+    let loadingInstance = Loading.service({ target: '#notebook-list', text: '拼命加载中' });
+
     Notebook.getAll()
       .then(res => {
         this.notebooks = res.data
+        loadingInstance.close();
+      }).catch(() => {
+        loadingInstance.close();
       })
   },
   methods: {
@@ -71,6 +78,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputPattern: /^.{1,36}$/,
+        inputValue: notebook.title,
         inputErrorMessage: '标题不能为空，且不超过36个字符'
       }).then(({ value }) => {
         title = value
