@@ -31,18 +31,12 @@ export default function request(url, type = "GET", data = {}) {
           resolve(res.data);
         } else {
           console.log("1");
-          Message({
-            type: "error",
-            message: res.data.msg
-          });
+          Message.error(res.data.msg);
           reject(res.data);
         }
       })
       .catch(err => {
-        Message({
-          type: "error",
-          message: err.response.data.msg
-        });
+        Message.error(err.response.data.msg);
         reject({ msg: err.response.data.msg });
       });
   });

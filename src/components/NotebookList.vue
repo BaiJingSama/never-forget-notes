@@ -62,10 +62,7 @@ export default {
       }).then(res => {
         res.data.friendlyCreatedAt = friendlyDate(res.data.createdAt)
         this.notebooks.unshift(res.data)
-        this.$message({
-          type: 'success',
-          message: res.msg
-        });
+        this.$message.success(res.msg);
       })
     },
     onEdit(notebook) {
@@ -80,10 +77,7 @@ export default {
         return Notebook.updateNotebook(notebook.id, { title: value })
       }).then(res => {
         notebook.title = title
-        this.$message({
-          type: 'success',
-          message: res.msg
-        });
+        this.$message.success(res.msg);
       })
     },
     onDelete(notebook) {
@@ -95,10 +89,7 @@ export default {
         return Notebook.deleteNotebook(notebook.id)
       }).then((res) => {
         this.notebooks.splice(this.notebooks.indexOf(notebook), 1)
-        this.$message({
-          type: 'success',
-          message: res.msg
-        })
+        this.$message.success(res.msg);
       })
     }
   }
