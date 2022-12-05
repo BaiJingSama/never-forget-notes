@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Message } from "element-ui";
 
 axios.defaults.headers.post["Content-Type"] =
   "application/x-www-form-urlencoded";
@@ -15,7 +16,7 @@ export default function request(url, type = "GET", data = {}) {
     let option = {
       url,
       method: type,
-      ValidityStates(status) {
+      validityStates(status) {
         return (status >= 200 && status < 300) || status === 400;
       }
     };
@@ -29,13 +30,20 @@ export default function request(url, type = "GET", data = {}) {
         if (res.status === 200) {
           resolve(res.data);
         } else {
-          console.error(res.data);
+          console.log("1");
+          Message({
+            type: "error",
+            message: res.data.msg
+          });
           reject(res.data);
         }
       })
       .catch(err => {
-        console.error({ msg: "网络异常" });
-        reject({ msg: "网络异常" });
+        Message({
+          type: "error",
+          message: err.response.data.msg
+        });
+        reject({ msg: err.response.data.msg });
       });
   });
 }

@@ -52,40 +52,54 @@ export default {
   },
   methods: {
     onCreate() {
-      let title = window.prompt('创建笔记本')
-      if (title.trim() === '') {
-        alert('笔记本名不能为空')
-        return
-      }
-      Notebook.addNotebook({ title })
-        .then(res => {
-          console.log(res.msg);
-          res.data.friendlyCreatedAt = friendlyDate(res.data.createdAt)
-          this.notebooks.unshift(res.data)
-          alert(res.msg)
-        })
+      this.$prompt('输入新笔记本标题', '创建笔记本', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /^.{1,36}$/,
+        inputErrorMessage: '标题不能为空，且不超过36个字符'
+      }).then(({ value }) => {
+        return Notebook.addNotebook({ title: value })
+      }).then(res => {
+        res.data.friendlyCreatedAt = friendlyDate(res.data.createdAt)
+        this.notebooks.unshift(res.data)
+        this.$message({
+          type: 'success',
+          message: res.msg
+        });
+      })
     },
     onEdit(notebook) {
-      let title = window.prompt('修改标题', notebook.title)
-      Notebook.updateNotebook(notebook.id, { title })
-        .then(res => {
-          console.log(res);
-          alert(res.msg)
-          notebook.title = title
-        })
+      let title = ''
+      this.$prompt('输入新笔记本标题', '修改笔记本', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /^.{1,36}$/,
+        inputErrorMessage: '标题不能为空，且不超过36个字符'
+      }).then(({ value }) => {
+        title = value
+        return Notebook.updateNotebook(notebook.id, { title: value })
+      }).then(res => {
+        notebook.title = title
+        this.$message({
+          type: 'success',
+          message: res.msg
+        });
+      })
     },
     onDelete(notebook) {
-      let isConfirm = window.confirm('确定要删除笔记本吗？')
-      console.log(isConfirm);
-      if (isConfirm) {
-        Notebook.deleteNotebook(notebook.id)
-          .then(res => {
-            console.log(res);
-            alert(res.msg)
-            this.notebooks.splice(this.notebooks.indexOf(notebook), 1)
-          })
-      }
-
+      this.$confirm('确认要删除笔记本吗?', '删除笔记本', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        return Notebook.deleteNotebook(notebook.id)
+      }).then((res) => {
+        this.notebooks.splice(this.notebooks.indexOf(notebook), 1)
+        this.$message({
+          type: 'success',
+          message: res.msg
+        })
+      })
     }
   }
 }
@@ -93,4 +107,4 @@ export default {
 
 <style scoped lang="less">
 @import url(../assets/css/notebook-list.less);
-</style>
+</style> 
