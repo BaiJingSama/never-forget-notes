@@ -1,6 +1,6 @@
 <template>
   <div class="note-sidebar">
-    <span class="btn add-note">添加笔记</span>
+    <span class="btn add-note" @click="addNote">添加笔记</span>
     <el-dropdown class="notebook-title" @command="handleCommand" placement="bottom">
       <span class="el-dropdown-link">
         {{curBook.title}}<i class="iconfont icon-down"></i>
@@ -29,6 +29,7 @@
 <script>
 import Notebooks from '@/apis/notebooks'
 import Notes from '@/apis/notes.js'
+import Bus from '../helpers/bus'
 
 export default {
   created() {
@@ -41,9 +42,10 @@ export default {
       }).then(res => {
         this.notes = res.data
         this.$emit('update:notes', this.notes)
+        Bus.$emit('update:notes', this.notes)
       })
   },
-  props:['curNote'],
+  props: ['curNote'],
   data() {
     return {
       notebooks: [],
@@ -62,7 +64,15 @@ export default {
           this.notes = res.data
           this.$emit('update:notes', this.notes)
         })
-    }
+    },
+    addNote() {
+      Notes.addNote({ notebookId: this.curBook.id })
+        .then(res => {
+          this.notes.unshift(res.data)
+          this.$message.success('新建笔记成功')
+          this.$router.push({ path: `/note?noteId=${res.data.id}&notebookId=${this.curBook.id}` })
+        })
+    },
   }
 }
 

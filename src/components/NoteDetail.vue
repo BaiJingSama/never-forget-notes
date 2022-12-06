@@ -2,20 +2,24 @@
   <div id="note" class="detail">
     <Note-sidebar @update:notes="val=>notes=val" />
     <div class="note-detail">
-      <div class="note-bar">
+      <div class="note-empty" v-show="!curNote.id">请选择笔记</div>
+      <!-- <div v-show="curNote.id"> -->
+      <div class="note-bar" v-show="curNote.id">
         <span>创建日期：{{curNote.createdAtFriendly}}</span>
         <span>更新日期：{{curNote.updatedAtFriendly}}</span>
-        <span>{{curNote.statusText}}</span>
-        <span class="iconfont icon-delete"></span>
+        <span>{{statusText}}</span>
+        <span class="iconfont icon-delete" @click="deleteNote"></span>
         <span class="iconfont icon-fullscreen"></span>
       </div>
-      <div class="note-title">
-        <input type="text" v-model="curNote.title" placeholder="输入标题">
+      <div class="note-title" v-show="curNote.id">
+        <input type="text" v-model="curNote.title" @input="updateNote" placeholder="输入标题">
       </div>
-      <div class="editor">
-        <textarea v-show="true" :value="curNote.content" placeholder="输入内容，支持markdown语法"></textarea>
+      <div class="editor" v-show="curNote.id">
+        <textarea v-show="true" v-model="curNote.content" @input="updateNote"
+          placeholder="输入内容，支持markdown语法"></textarea>
         <div class="preview markdown-body" v-show="false"></div>
       </div>
+      <!-- </div> -->
     </div>
   </div>
 </template>
@@ -24,13 +28,52 @@
 import Auth from '@/apis/auth';
 import router from '@/router/index'
 import NoteSidebar from './NoteSidebar.vue';
+import Bus from '../helpers/bus';
+import _ from 'lodash'
+import Notes from '../apis/notes';
+
 export default {
   name: 'Login',
   data() {
     return {
       curNote: {},
-      notes: []
+      notes: [],
+      statusText: '笔记未保存',
     }
+  },
+  methods: {
+    updateNote: _.debounce(function () {
+      Notes.updateNote(
+        { noteId: this.curNote.id },
+        { title: this.curNote.title, content: this.curNote.content })
+        .then(data => {
+          this.statusText = '笔记已保存，保存时间为' + this.getDate()
+        })
+        .catch(data => {
+          this.statusText = '笔记保存失败'
+        })
+    }, 300),
+    getDate() {
+      let now = new Date(),
+        y = now.getFullYear(),
+        m = now.getMonth() + 1,
+        d = now.getDate();
+      return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d) + ' '
+        + now.toTimeString().substr(0, 8)
+    },
+    deleteNote() {
+      Notes.deleteNote({ noteId: this.curNote.id })
+        .then(data => {
+          this.$message.success(data.msg)
+          this.notes.splice(this.notes.indexOf(this.curNote), 1)
+          this.$router.go(0)
+        })
+    },
+    updateNoteId(id) {
+      this.noteId = id
+    }
+
+
   },
   created() {
     Auth.getInfo()
@@ -39,6 +82,9 @@ export default {
           router.push({ path: '/login' })
         }
       })
+    Bus.$on('update:notes', val => {
+      this.curNote = val.find(note => note.id.toString() === this.$route.query.noteId) || {}
+    })
   },
   components: {
     NoteSidebar
