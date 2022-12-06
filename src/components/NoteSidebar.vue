@@ -30,7 +30,6 @@
 import Notebooks from '@/apis/notebooks'
 import Notes from '@/apis/notes.js'
 
-window.Notes = Notes
 export default {
   created() {
     Notebooks.getAll()
@@ -38,8 +37,13 @@ export default {
         this.notebooks = res.data
         this.curBook = this.notebooks.find(notebook => notebook.id.toString() === this.$route.query.notebookId)
           || this.notebooks[0] || {}
+        return Notes.getAll({ notebookId: this.curBook.id })
+      }).then(res => {
+        this.notes = res.data
+        this.$emit('update:notes', this.notes)
       })
   },
+  props:['curNote'],
   data() {
     return {
       notebooks: [],
@@ -56,6 +60,7 @@ export default {
       Notes.getAll({ notebookId })
         .then(res => {
           this.notes = res.data
+          this.$emit('update:notes', this.notes)
         })
     }
   }
