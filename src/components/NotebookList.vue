@@ -7,10 +7,11 @@
       <div class="layout">
         <h3>笔记本列表({{notebooks.length}})</h3>
         <div class="book-list">
-          <router-link v-for="notebook in notebooks" :to="`/note?notebookId=${notebook.id}`" class="notebook">
+          <router-link v-for="notebook in notebooks" :key="notebook.id" :to="`/note?notebookId=${notebook.id}`"
+            class="notebook">
             <div>
               <span class="iconfont icon-notebook"></span> {{notebook.title}}
-              <span>{{notebook.cont}}</span>
+              <span>{{notebook.noteCounts}}</span>
               <span class="action" @click.prevent="onEdit(notebook)">编辑</span>
               <span class="action" @click.prevent="onDelete(notebook)">删除</span>
               <span class="date">{{notebook.friendlyCreatedAt }}</span>
@@ -42,7 +43,6 @@ export default {
   created() {
     Auth.getInfo()
       .then(res => {
-
         if (!res.isLogin) {
           router.push({ path: '/login' })
         }

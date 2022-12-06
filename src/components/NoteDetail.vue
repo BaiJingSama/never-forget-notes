@@ -1,13 +1,17 @@
 <template>
-  <div id="note-detail">
-    <h1>notebookId : {{ $route.query.notebookId }}</h1>
-    <h2>noteId : {{ $route.query.noteId }}</h2>
+  <div id="note" class="detail">
+    <Note-sidebar />
+    <div id="note-detail">
+      <h1>notebookId : {{ $route.query.notebookId }}</h1>
+      <h2>noteId : {{ $route.query.noteId }}</h2>
+    </div>
   </div>
 </template>
 
 <script>
 import Auth from '@/apis/auth';
 import router from '@/router/index'
+import NoteSidebar from './NoteSidebar.vue';
 export default {
   name: 'Login',
   data() {
@@ -22,12 +26,18 @@ export default {
           router.push({ path: '/login' })
         }
       })
+  },
+  components: {
+    NoteSidebar
   }
 }
 </script>
 
 <style scoped>
-h1 {
-  color: blue;
+#note {
+  display: flex;
+  align-items: stretch;
+  border-color: #fff;
+  flex: 1;
 }
 </style>
