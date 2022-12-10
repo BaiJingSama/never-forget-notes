@@ -18,6 +18,7 @@ export default {
           );
           res.data.forEach(notebook => {
             notebook.friendlyCreatedAt = friendlyDate(notebook.createdAt);
+            notebook.friendlyUpdatedAt = friendlyDate(notebook.UpdatedAt);
           });
           resolve(res);
         })
@@ -33,6 +34,16 @@ export default {
     return request(URL.DELETE.replace(":id", notebookId), "DELETE");
   },
   addNotebook({ title = "" } = { title: "" }) {
-    return request(URL.ADD, "POST", { title });
+    return new Promise((resolve, reject) => {
+      request(URL.ADD, "POST", { title })
+        .then(res => {
+          res.data.friendlyCreatedAt = friendlyDate(res.data.createdAt);
+          res.data.friendlyUpdatedAt = friendlyDate(res.data.UpdatedAt);
+          resolve(res);
+        })
+        .catch(err => {
+          reject(err);
+        });
+    });
   }
 };
