@@ -39,23 +39,8 @@ export default {
     }
   },
   created() {
-    Auth.getInfo()
-      .then(res => {
-        if (!res.isLogin) {
-          router.push({ path: '/login' })
-        }
-      })
-    // let loadingInstance = Loading.service({ target: '#notebook-list', text: '拼命加载中' });
-
-    // Notebook.getAll()
-    //   .then(res => {
-    //     this.notebooks = res.data
-    //     loadingInstance.close();
-    //   }).catch(() => {
-    //     loadingInstance.close();
-    //   })
-
-    this.$store.dispatch('getNotebooks')
+    this.checkLogin({ path: '/login' })
+    this.getNotebooks()
   },
   computed: {
     ...mapGetters(['notebooks'])
@@ -65,7 +50,8 @@ export default {
       'getNotebooks',
       'addNotebook',
       'updateNotebook',
-      'deleteNotebook'
+      'deleteNotebook',
+      'checkLogin'
 
     ]),
     onCreate() {

@@ -33,13 +33,8 @@
 <script>
 import Auth from '@/apis/auth'
 import Bus from '../helpers/bus'
+import { mapGetters, mapActions } from 'vuex';
 
-Auth.getInfo()
-  .then(data => {
-    console.log(data);
-  })
-
-// 获取用户状态
 
 export default {
   data() {
@@ -62,6 +57,10 @@ export default {
   },
 
   methods: {
+    ...mapActions({
+      loginUser: 'login',
+      registerUser: 'register'
+    }),
     showLogin() {
       this.isShowLogin = true
       this.isShowRegister = false
@@ -84,11 +83,10 @@ export default {
       this.register.isError = false
       this.register.notice = ''
       console.log(`start register..., username: ${this.register.username} , password: ${this.register.password}`)
-      Auth.register({ username: this.register.username, password: this.register.password })
-        .then(data => {
+      this.registerUser({ username: this.register.username, password: this.register.password })
+        .then(() => {
           this.register.isError = false
           this.register.notice = ''
-          Bus.$emit('userInfo', { username: this.register.username })
           this.$router.push({ path: 'notebooks' })
         }).catch(data => {
           this.register.isError = true
@@ -108,11 +106,10 @@ export default {
       }
       this.login.isError = false
       this.login.notice = ''
-      Auth.login({ username: this.login.username, password: this.login.password })
-        .then(data => {
+      this.loginUser({ username: this.login.username, password: this.login.password })
+        .then(() => {
           this.login.isError = false
           this.login.notice = ''
-          Bus.$emit('userInfo', { username: this.login.username })
           this.$router.push({ path: 'notebooks' })
           // console.log('正在跳转')
 

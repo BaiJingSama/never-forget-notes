@@ -60,7 +60,8 @@ export default {
     ]),
     ...mapActions([
       'updateNote',
-      'deleteNote'
+      'deleteNote',
+      'checkLogin'
     ]),
     onUpdateNote: _.debounce(function () {
       this.updateNote(
@@ -92,13 +93,7 @@ export default {
 
   },
   created() {
-    Auth.getInfo()
-      .then(res => {
-        if (!res.isLogin) {
-          router.push({ path: '/login' })
-        }
-      })
-
+    this.checkLogin({ path: '/login' })
   },
   components: {
     NoteSidebar
