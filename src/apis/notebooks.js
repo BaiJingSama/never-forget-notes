@@ -18,7 +18,7 @@ export default {
           );
           res.data.forEach(notebook => {
             notebook.friendlyCreatedAt = friendlyDate(notebook.createdAt);
-            notebook.friendlyUpdatedAt = friendlyDate(notebook.UpdatedAt);
+            notebook.friendlyUpdatedAt = friendlyDate(notebook.updatedAt);
           });
           resolve(res);
         })
