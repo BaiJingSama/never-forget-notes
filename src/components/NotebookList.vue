@@ -26,10 +26,6 @@
 </template>
 
 <script>
-import Auth from '@/apis/auth';
-import router from '@/router/index'
-import Notebook from '@/apis/notebooks'
-import { friendlyDate } from '@/helpers/util'
 import { Loading } from 'element-ui';
 import { mapState, mapActions, mapGetters } from 'vuex'
 
@@ -41,6 +37,7 @@ export default {
   created() {
     this.checkLogin({ path: '/login' })
     this.getNotebooks()
+    console.log(this.notebooks);
   },
   computed: {
     ...mapGetters(['notebooks'])

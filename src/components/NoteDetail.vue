@@ -26,8 +26,6 @@
 </template>
 
 <script>
-import Auth from '@/apis/auth';
-import router from '@/router/index'
 import NoteSidebar from './NoteSidebar.vue';
 import _ from 'lodash'
 import MarkdownIt from 'markdown-it'
@@ -64,6 +62,7 @@ export default {
       'checkLogin'
     ]),
     onUpdateNote: _.debounce(function () {
+      if (!this.curNote.id) return
       this.updateNote(
         { noteId: this.curNote.id, title: this.curNote.title, content: this.curNote.content })
         .then(data => {

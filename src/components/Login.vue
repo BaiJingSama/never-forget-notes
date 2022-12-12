@@ -31,8 +31,6 @@
 </template>
 
 <script>
-import Auth from '@/apis/auth'
-import Bus from '../helpers/bus'
 import { mapGetters, mapActions } from 'vuex';
 
 

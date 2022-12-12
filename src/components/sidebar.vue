@@ -6,7 +6,7 @@
       <router-link to="/notebooks" title="笔记本"><i class="iconfont icon-notebook"></i></router-link>
       <router-link to="/trash" title="回收站"><i class="iconfont icon-trash"></i></router-link>
     </div>
-    <div class="logout" @click="logout">
+    <div class="logout" @click="onLogout">
       <i class="iconfont icon-logout"></i>
     </div>
   </div>
@@ -15,17 +15,16 @@
 <script>
 import avatar from '@/components/Avatar'
 import Auth from '@/apis/auth'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
     avatar
   },
   methods: {
-    logout() {
-      Auth.logout()
-        .then(data => {
-          this.$router.push({ path: 'login' })
-        })
+    ...mapActions(['logout']),
+    onLogout() {
+      this.logout({ path: '/login' })
     }
   }
 }

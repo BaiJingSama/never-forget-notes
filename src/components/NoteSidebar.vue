@@ -37,21 +37,16 @@ export default {
         return this.getNotes({ notebookId: this.curBook.id })
       }).then(() => {
         this.setCurNote({ curNoteId: this.$route.query.noteId })
+        this.$router.replace({
+          path: '/note',
+          query: {
+            noteId: this.curNote.id,
+            notebookId: this.curBook.id
+          }
+        })
       })
 
-    // Notebooks.getAll()
-    //   .then(res => {
-    //     this.notebooks = res.data
-    //     this.curBook = this.notebooks.find(notebook => notebook.id.toString() === this.$route.query.notebookId)
-    //       || this.notebooks[0] || {}
-    //     return Notes.getAll({ notebookId: this.curBook.id })
-    //   }).then(res => {
-    //     this.notes = res.data
-    //     this.$emit('update:notes', this.notes)
-    //     Bus.$emit('update:notes', this.notes)
-    //   })
   },
-  props: ['curNote'],
   data() {
     return {
     }
@@ -60,7 +55,8 @@ export default {
     ...mapGetters([
       'notebooks',
       'notes',
-      'curBook'
+      'curBook',
+      'curNote'
     ])
   },
   methods: {
@@ -80,13 +76,17 @@ export default {
       }
       this.$store.commit('setCurBook', { curBookId: notebookId })
       this.getNotes({ notebookId: this.curBook.id })
+        .then(() => {
+          this.setCurNote({})
+          this.$router.replace({
+            path: '/note',
+            query: {
+              noteId: this.curNote.id,
+              notebookId: this.curBook.id
+            }
+          })
+        })
 
-      // this.curBook = this.notebooks.find(notebook => notebook.id === notebookId)
-      // Notes.getAll({ notebookId })
-      //   .then(res => {
-      //     this.notes = res.data
-      //     this.$emit('update:notes', this.notes)
-      //   })
     },
     onAddNote() {
       this.addNote({ notebookId: this.curBook.id })

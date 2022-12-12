@@ -38,7 +38,7 @@ const mutations = {
       note => note.id != payload.noteId
     );
   },
-  setCurTrashNote(state, payload) {
+  setCurTrashNote(state, payload = {}) {
     state.curTrashNoteId = payload.curTrashNoteId;
   }
 };
