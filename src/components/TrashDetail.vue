@@ -52,6 +52,7 @@ export default {
   },
   created() {
     this.checkLogin({ path: '/login' })
+    this.getNotebooks()
     this.getTrashNotes()
       .then(() => {
         this.setCurTrashNote({ curTrashNoteId: this.$route.query.noteId })
@@ -65,7 +66,8 @@ export default {
       'checkLogin',
       'deleteTrashNote',
       'revertTrashNote',
-      'getTrashNotes'
+      'getTrashNotes',
+      'getNotebooks'
     ]),
     onDelete() {
       console.log(this.curTrashNote.id);

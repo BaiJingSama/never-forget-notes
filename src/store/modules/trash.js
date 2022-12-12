@@ -14,7 +14,14 @@ const getters = {
     return state.trashNotes.find(note => note.id == state.curTrashNoteId) || {};
   },
 
-  belongTo: () => {}
+  belongTo: (state, getters, rootState, rootGetters) => {
+    console.log(arguments);
+    let notebook =
+      rootGetters.notebooks.find(
+        notebook => notebook.id == getters.curTrashNote.notebookId
+      ) || {};
+    return notebook.title || "";
+  }
 };
 
 const mutations = {
